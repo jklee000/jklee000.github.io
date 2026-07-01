@@ -28,6 +28,10 @@
     @media (min-width: 1024px) {
       html { font-size: 122%; }   /* 16px → 약 19.5px, 사이트 전체(글자·여백·카드)가 비례 확대 */
     }
+    /* 스마트폰: 캐리어 안감 패딩을 줄여 흰 카드가 화면을 더 넓게 (안감은 살짝 유지) */
+    @media (max-width: 640px) {
+      .suitcase-shell { padding: 8px; }
+    }
 
     /* ============ 캐리어(여행 가방) + 약봉지 테마 ============ */
     /* 페이지 배경 = 가방 안감(라이닝) */
@@ -275,7 +279,7 @@
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+  <main class="max-w-7xl mx-auto px-2 sm:px-4 py-6 space-y-6">
 
     <!-- 조건 선택 프레임 -->
     <section class="case-interior bg-white rounded-2xl shadow-sm border border-slate-100 p-5 no-print">
