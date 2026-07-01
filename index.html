@@ -281,8 +281,8 @@
 
   <main class="max-w-7xl mx-auto px-0 sm:px-4 py-6 space-y-6">
 
-    <!-- 조건 선택 프레임 -->
-    <section class="case-interior bg-white rounded-2xl shadow-sm border border-slate-100 p-5 no-print">
+    <!-- 조건 선택 프레임 (1단계) -->
+    <section id="step-input" class="case-interior bg-white rounded-2xl shadow-sm border border-slate-100 p-5 no-print">
 
       <!-- 1. 여행지 -->
       <div class="mb-5">
@@ -331,10 +331,18 @@
         </h2>
         <div id="symptom-buttons" class="flex flex-wrap gap-2"></div>
       </div>
+
+      <!-- 다음 단계 버튼 -->
+      <button id="btn-next" class="mt-6 w-full py-3 rounded-xl bg-[#1f7bd8] text-white font-bold text-base shadow-sm hover:brightness-110 transition flex items-center justify-center gap-2">
+        나의 상비약 체크리스트 보기 <span aria-hidden="true">→</span>
+      </button>
     </section>
 
-    <!-- 결과 대시보드 -->
+    <!-- 결과 대시보드 (2단계) -->
     <section id="result-section" class="case-interior bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <button id="btn-back" class="mb-4 text-sm text-brand-700 font-semibold inline-flex items-center gap-1 hover:underline no-print">
+        <span aria-hidden="true">←</span> 이전 (조건 다시 선택)
+      </button>
       <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div>
           <h2 class="text-lg font-bold text-slate-800">📋 나의 상비약 체크리스트</h2>
@@ -1173,6 +1181,16 @@
   document.getElementById('modal').onclick = (e)=>{ if(e.target.id==='modal') closeModal(); };
   document.getElementById('btn-print').onclick = ()=> window.print();
   document.getElementById('btn-image').onclick = saveImage;
+
+  // 단계 전환 (1: 조건 선택 → 2: 상비약 체크리스트)
+  function goStep(n) {
+    document.getElementById('step-input').style.display     = (n === 1) ? '' : 'none';
+    document.getElementById('result-section').style.display = (n === 2) ? '' : 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.getElementById('btn-next').onclick = () => goStep(2);
+  document.getElementById('btn-back').onclick = () => goStep(1);
+
   document.getElementById('optional-toggle').onclick = () => {
     const grid = document.getElementById('optional-grid');
     const chev = document.getElementById('optional-chevron');
@@ -1186,6 +1204,7 @@
   setupCountrySearch();
   renderControls();
   renderResults();
+  goStep(1);   // 처음엔 조건 선택 페이지부터
 
   // 인트로(캐리어 오프닝) 종료 — 애니메이션 후 제거 + 클릭 시 건너뛰기
   (function () {
