@@ -1,0 +1,12 @@
+# OMC 내부 상태
+.omc/
+
+# 개인 작업/메모 (공개 제외)
+sandbox/
+
+# 교육 문서 (공개 제외)
+*.hwpx
+
+# 시스템 파일
+Thumbs.db
+.DS_Store

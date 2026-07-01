@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>여행 상비약 가이드 · Travel Med Kit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" onerror="window.__noCanvas=true"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#f2f8ff',100:'#e2f4fe',200:'#bfe6fd',300:'#8ccdf9',400:'#5cb2f6',500:'#3399ec',600:'#1f7bd8',700:'#1a5cab' },
+          },
+          fontFamily: { sans: ['Segoe UI','Malgun Gothic','Apple SD Gothic Neo','Microsoft YaHei','Microsoft JhengHei','Yu Gothic UI','Yu Gothic','Meiryo','PingFang SC','PingFang TC','Hiragino Sans','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* 웹폰트 제거 — Windows/Mac 기본 설치된 시스템 폰트로 한국어·중국어(간체/번체)·일본어 모두 표시 */
+    body { font-family: 'Segoe UI','Malgun Gothic','Apple SD Gothic Neo','Microsoft YaHei','Microsoft JhengHei','Yu Gothic UI','Yu Gothic','Meiryo','PingFang SC','PingFang TC','Hiragino Sans',sans-serif; }
+    .card-pop { transition: transform .15s ease, box-shadow .15s ease; }
+    .card-pop:hover { transform: translateY(-3px); }
+
+    /* 큰 화면(데스크톱)에서 전체 UI를 살짝 크게 — 모바일(≤1023px)은 그대로 */
+    @media (min-width: 1024px) {
+      html { font-size: 122%; }   /* 16px → 약 19.5px, 사이트 전체(글자·여백·카드)가 비례 확대 */
+    }
+
+    /* ============ 캐리어(여행 가방) + 약봉지 테마 ============ */
+    /* 페이지 배경 = 가방 안감(라이닝) */
+    body {
+      background-color: #dbeff3 !important;
+      background-image:
+        repeating-linear-gradient(45deg, rgba(90,155,221,.045) 0 11px, rgba(90,155,221,0) 11px 22px) !important;
+    }
+
+    /* 헤더 = 캐리어 뚜껑(하드셸) + 손잡이 */
+    header.suitcase-lid {
+      position: relative;
+      background-image: linear-gradient(180deg, #ddf2ff, #a6dcfb) !important;
+      box-shadow: inset 0 -6px 12px rgba(70,120,175,.12);
+      border-bottom: 3px solid rgba(70,120,175,.28);
+    }
+
+    /* 섹션 = 가방 내부 라이닝 컴파트먼트 */
+    .case-interior {
+      background-image: linear-gradient(180deg, #fdfeff, #eef4fc) !important;
+      border: 1px solid #d8e6f6 !important;
+      box-shadow: inset 0 2px 7px rgba(90,120,160,.05), 0 8px 20px rgba(63,126,194,.07) !important;
+      position: relative;
+    }
+    .case-interior::before {                 /* 안감 바느질(스티치) */
+      content: "";
+      position: absolute; inset: 7px;
+      border: 2px dashed rgba(150,180,220,.35);
+      border-radius: 14px;
+      pointer-events: none;
+    }
+
+    /* 약 카드 = 약봉지(지퍼백 파우치) */
+    .med-card.med-pouch {
+      position: relative;
+      overflow: hidden;
+      padding-top: 1.9rem !important;
+      background-image: linear-gradient(180deg, #ffffff, #f6f9fe) !important;
+      border: 1px solid #d5e2f2 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 2px 6px rgba(80,110,150,.1) !important;
+    }
+    .med-card.med-pouch::after {             /* 지퍼백 입구(지퍼 트랙 + 이빨) */
+      content: "";
+      position: absolute; left: 0; right: 0; top: 0; height: 1.25rem;
+      background:
+        repeating-linear-gradient(90deg, #8ccdf9 0 3px, rgba(255,255,255,.65) 3px 7px) center / 100% 5px no-repeat,
+        linear-gradient(180deg, #e9f1fc, #c6e6fd);
+      border-bottom: 1px solid #8fcdf9;
+      border-radius: 12px 12px 0 0;
+      box-shadow: inset 0 4px 0 -3px #77bff1, inset 0 -6px 0 -5px #77bff1;
+    }
+    .med-card.med-pouch::before {            /* 지퍼 손잡이(슬라이더) */
+      content: "";
+      position: absolute; top: 2px; left: 14px; width: 10px; height: 15px; z-index: 2;
+      background: linear-gradient(180deg, #5cb2f6, #1f7bd8);
+      border-radius: 2px 2px 4px 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.5);
+    }
+    .med-card.med-pouch:hover { box-shadow: 0 8px 18px rgba(80,110,150,.16) !important; }
+
+    /* 캐리어 러기지 네임택 */
+    .luggage-tag {
+      position: absolute; top: 12px; right: 14px; z-index: 3;
+      width: 58px; padding: 13px 5px 6px; border-radius: 8px;
+      background: linear-gradient(180deg, #fff8e6, #ffe9a8);
+      border: 1px solid #e8cf7e;
+      box-shadow: 0 3px 6px rgba(0,0,0,.18);
+      text-align: center; transform: rotate(6deg);
+      font-size: 9px; font-weight: 800; letter-spacing: .08em; color: #8a6d1f; line-height: 1.35;
+    }
+    .luggage-tag span { display: block; }
+    .luggage-tag::before {                   /* 끈 구멍 */
+      content: ""; position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+      width: 8px; height: 8px; border-radius: 50%; background: #fffdf5; border: 1px solid #e8cf7e;
+    }
+    .luggage-tag::after {                     /* 끈 */
+      content: ""; position: absolute; top: -7px; left: 50%;
+      width: 2px; height: 12px; background: #c9a94e; transform: translateX(-50%) rotate(-6deg);
+    }
+
+    /* 상황별 선택 목록 접이식 — 펼침 애니메이션 */
+    @keyframes optReveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    #optional-grid:not(.hidden) { animation: optReveal .22s ease; }
+
+    /* ============ 화면 전체 = 캐리어 '안쪽 안감'(인테리어) ============ */
+    .suitcase-shell {
+      position: relative;
+      max-width: 78rem;
+      margin: 2rem auto 3rem;
+      padding: 16px;
+      border-radius: 26px;
+      /* 안감 패브릭(트윌 짜임) + 안쪽 벽 그림자 */
+      background:
+        repeating-linear-gradient(45deg, rgba(255,255,255,.30) 0 1px, transparent 1px 5px),
+        repeating-linear-gradient(-45deg, rgba(63,126,194,.05) 0 1px, transparent 1px 5px),
+        linear-gradient(180deg, #eef5fe, #dbe9f8);
+      border: 1px solid #cfe0f4;
+      box-shadow:
+        inset 0 4px 16px rgba(63,126,194,.16),
+        inset 0 -3px 10px rgba(63,126,194,.08),
+        0 24px 48px -24px rgba(63,126,194,.28);
+    }
+    .suitcase-shell > header { border-radius: 16px 16px 0 0; overflow: hidden; }
+
+    /* 손잡이(위) — 안감 패널 위로 살짝 */
+    .sc-handle { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 190px; height: 32px; z-index: 0; }
+    .sc-handle::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 15px; border-radius: 10px;
+      background: linear-gradient(180deg, #8ccdf9, #1f7bd8);
+      box-shadow: 0 3px 5px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.4);
+    }
+    .sc-handle::after {
+      content: ""; position: absolute; top: 12px; left: 26px; right: 26px; height: 22px;
+      border-left: 9px solid #3399ec; border-right: 9px solid #3399ec; border-radius: 3px;
+    }
+    /* 바퀴(아래) — 안감 패널 밑으로 살짝 */
+    .sc-wheels { position: absolute; left: 0; right: 0; bottom: -16px; display: flex; justify-content: space-between; padding: 0 48px; z-index: -1; }
+    .sc-wheels span { width: 30px; height: 30px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #3a3a3a, #0b0b0b); border: 3px solid #2a2a2a;
+      box-shadow: 0 4px 6px rgba(0,0,0,.35); }
+
+    /* ============ 인트로: 세로형 캐리어의 뚜껑이 열리는 오프닝 ============ */
+    #intro {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      background: #eef5fe;                 /* 단색 바탕(그라데이션 제거) */
+      perspective: 1500px;
+      animation: introOut .7s ease 2.0s forwards;
+    }
+    @keyframes introOut { to { opacity: 0; transform: scale(1.1); visibility: hidden; } }
+
+    /* 가로가 짧고 세로가 긴 캐리어 (더 크게) */
+    .intro-case {
+      position: relative; width: 250px; height: 360px; transform-style: preserve-3d;
+      animation: caseIn .55s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes caseIn { from { transform: translateY(24px) scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+
+    /* 손잡이(위) */
+    .intro-handle {
+      position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 30px; z-index: 0;
+      border: 9px solid #1f7bd8; border-bottom: none; border-radius: 14px 14px 0 0;
+    }
+
+    /* 바퀴(아래) */
+    .intro-wheels {
+      position: absolute; left: 0; right: 0; bottom: -16px;
+      display: flex; justify-content: space-between; padding: 0 34px;
+    }
+    .intro-wheels span {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #3a3a3a, #0b0b0b);
+      border: 3px solid #2a2a2a; box-shadow: 0 4px 6px rgba(0,0,0,.35);
+    }
+
+    /* 열리면 보이는 내부(라이닝) */
+    .intro-core {
+      position: absolute; inset: 10px; border-radius: 18px;
+      background: linear-gradient(180deg, #f4f9ff, #e6f0fc);
+      border: 2px solid #e2f4fe;
+      box-shadow: inset 0 2px 12px rgba(63,126,194,.16);
+      display: flex; align-items: center; justify-content: center; text-align: center; padding: 14px;
+    }
+    .intro-label { color: #111; font-weight: 800; font-size: 18px; line-height: 1.55; letter-spacing: .01em; opacity: 0; animation: labelIn .5s ease 1.5s both; }
+    @keyframes labelIn { to { opacity: 1; } }
+
+    /* 앞면 뚜껑 — 도트(물방울) 무늬 · 왼쪽 경첩으로 옆으로 열림 */
+    .intro-lid {
+      position: absolute; inset: 0; transform-origin: left center;
+      border-radius: 20px; backface-visibility: hidden;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.6) 2.6px, transparent 3px) 0 0 / 20px 20px,
+        #8ccdf9;                           /* 연한 하늘색 + 도트 무늬 */
+      box-shadow: inset -12px 0 18px rgba(0,0,0,.10), 0 16px 34px rgba(70,120,175,.35);
+      border: 2px solid rgba(120,165,215,.5);
+      animation: lidOpen .85s cubic-bezier(.5,0,.2,1) .7s both;   /* 0.7s 뒤 옆으로 열림 */
+    }
+    @keyframes lidOpen { from { transform: rotateY(0); } to { transform: rotateY(-128deg); } }
+
+    /* 뚜껑 걸쇠(여는 쪽) */
+    .intro-latch {
+      position: absolute; top: 50%; right: -7px; transform: translateY(-50%);
+      width: 15px; height: 60px; border-radius: 4px; z-index: 2;
+      background: linear-gradient(180deg, #eafaff, #e2f4fe); border: 1px solid #1f7bd8;
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+
+    /* 모션 최소화 설정 시 인트로 생략 */
+    @media (prefers-reduced-motion: reduce) { #intro { animation: none; opacity: 0; visibility: hidden; } }
+
+    /* 약봉지 수납칸 = 천 안감 + 칸막이 라인 */
+    #essential-grid, #optional-grid {
+      padding: 12px; border-radius: 14px;
+      background:
+        repeating-linear-gradient(45deg, rgba(255,255,255,.28) 0 1px, transparent 1px 4px),
+        linear-gradient(180deg, #f0f6fd, #e2edfb);
+      box-shadow: inset 0 3px 10px rgba(63,126,194,.13);
+    }
+    /* 봉지는 수납칸 안에 얌전히 */
+    .med-card.med-pouch { box-shadow: 0 1px 3px rgba(63,126,194,.13) !important; }
+
+    @media print {
+      .no-print { display: none !important; }
+      .suitcase-shell { margin: 0 auto !important; padding: 0 !important; background: #fff !important; border: none !important; box-shadow: none !important; }
+      .sc-handle, .sc-wheels, #intro { display: none !important; }
+      #optional-grid { display: grid !important; }   /* 인쇄 시 접혀 있어도 선택 목록 표시 */
+      body { background: #fff !important; }
+      #result-section { box-shadow: none !important; }
+      .print-block { break-inside: avoid; }
+      .case-interior { background: #fff !important; box-shadow: none !important; }
+      .case-interior::before { display: none !important; }
+      .med-card.med-pouch { background: #fff !important; box-shadow: none !important; }
+      .med-card.med-pouch::after { background: #f0f0f0 !important; }
+      .med-card.med-pouch::before { display: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+  <!-- 인트로: 캐리어 오프닝 -->
+  <div id="intro" class="no-print" aria-hidden="true">
+    <div class="intro-case">
+      <div class="intro-wheels"><span></span><span></span></div>
+      <div class="intro-handle"></div>
+      <div class="intro-core"><span class="intro-label">🧳 여행<br>상비약 가이드</span></div>
+      <div class="intro-lid"><div class="intro-latch"></div></div>
+    </div>
+  </div>
+
+  <!-- 헤더 -->
+  <div class="suitcase-shell">
+    <div class="sc-handle" aria-hidden="true"></div>
+
+  <header class="suitcase-lid bg-gradient-to-r from-[#bfe6fd] to-[#e2f4fe] text-slate-800">
+    <div class="luggage-tag no-print" aria-hidden="true"><span>TRAVEL</span><span>MED&nbsp;KIT</span></div>
+    <div class="max-w-7xl mx-auto px-4 py-6">
+      <h1 class="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+        <span>🧳💊</span> 여행 상비약 가이드
+      </h1>
+      <p class="text-slate-600 mt-1 text-sm sm:text-base">
+        여행지 환경과 동반자, 증상을 선택하면 꼭 챙길 상비약과 복약 주의사항을 한눈에 보여드립니다.
+      </p>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- 조건 선택 프레임 -->
+    <section class="case-interior bg-white rounded-2xl shadow-sm border border-slate-100 p-5 no-print">
+
+      <!-- 1. 여행지 -->
+      <div class="mb-5">
+        <h2 class="font-semibold text-slate-700 mb-2 flex items-center gap-2">
+          <span class="bg-brand-100 text-brand-700 rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">1</span>
+          여행지 선택 <span class="text-xs text-slate-400 font-normal">(환경 유형 또는 국가)</span>
+        </h2>
+        <div id="dest-buttons" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+        <div class="mt-3 relative">
+          <label class="text-xs text-slate-500">또는 방문 국가로 찾기</label>
+          <input id="country-search" type="text" placeholder="국가명 입력 (예: 태국, 페루, 네팔)" autocomplete="off"
+            class="w-full mt-1 px-3 py-2 rounded-lg border border-slate-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none text-sm" />
+          <div id="country-list" class="hidden absolute z-20 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-56 overflow-y-auto"></div>
+          <div id="country-selected" class="mt-2"></div>
+          <div id="region-wrap" class="hidden mt-2">
+            <label class="text-xs text-slate-500">세부 지역</label>
+            <div id="region-buttons" class="flex flex-wrap gap-2 mt-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 여행 월 -->
+      <div class="mb-5">
+        <h2 class="font-semibold text-slate-700 mb-2 flex items-center gap-2">
+          <span class="bg-brand-100 text-brand-700 rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">2</span>
+          여행 월 <span class="text-xs text-slate-400 font-normal">(선택 — 그 달의 현지 날씨를 반영)</span>
+        </h2>
+        <div id="month-buttons" class="grid grid-cols-6 sm:grid-cols-12 gap-1.5"></div>
+        <p id="weather-hint" class="text-xs text-brand-700 mt-2"></p>
+      </div>
+
+      <!-- 3. 동반자 -->
+      <div class="mb-5">
+        <h2 class="font-semibold text-slate-700 mb-2 flex items-center gap-2">
+          <span class="bg-brand-100 text-brand-700 rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">3</span>
+          동반자 구성 <span class="text-xs text-slate-400 font-normal">(복수 선택)</span>
+        </h2>
+        <div id="companion-buttons" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- 4. 보유 증상 -->
+      <div>
+        <h2 class="font-semibold text-slate-700 mb-2 flex items-center gap-2">
+          <span class="bg-brand-100 text-brand-700 rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">4</span>
+          현재/우려 증상 <span class="text-xs text-slate-400 font-normal">(있으면 선택 — 관련 약을 '필수'로 올려줍니다)</span>
+        </h2>
+        <div id="symptom-buttons" class="flex flex-wrap gap-2"></div>
+      </div>
+    </section>
+
+    <!-- 결과 대시보드 -->
+    <section id="result-section" class="case-interior bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">📋 나의 상비약 체크리스트</h2>
+          <p id="result-summary" class="text-sm text-slate-500"></p>
+        </div>
+        <div class="flex gap-2 no-print">
+          <button id="btn-print" class="text-sm px-3 py-2 rounded-lg border border-[#bfe6fd] bg-[#bfe6fd] text-black hover:brightness-95">🖨️ 인쇄 / PDF</button>
+          <button id="btn-image" class="text-sm px-3 py-2 rounded-lg border border-[#bfe6fd] bg-[#bfe6fd] text-black hover:brightness-95">🖼️ 이미지 저장</button>
+        </div>
+      </div>
+
+      <!-- 국가별 고유 주의 안내 -->
+      <div id="advisory" class="hidden mb-4 bg-orange-50 border border-orange-200 rounded-xl p-3 text-sm text-orange-800"></div>
+
+      <!-- 필수 -->
+      <div class="mb-5 print-block">
+        <h3 class="text-sm font-bold text-rose-600 mb-2 inline-flex items-center gap-1 bg-rose-50 border border-rose-200 px-3 py-1 rounded-full shadow-sm">⭐ 필수 상비약</h3>
+        <div id="essential-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </div>
+
+      <!-- 선택 (버튼 클릭 시 펼쳐지는 접이식) -->
+      <div class="print-block">
+        <button id="optional-toggle" type="button" aria-expanded="false"
+          class="w-full flex items-center justify-between gap-2 text-sm font-bold text-slate-500 mb-2 hover:text-brand-700 transition">
+          <span class="inline-flex items-center gap-1 bg-white border border-slate-200 px-3 py-1 rounded-full shadow-sm">➕ 상황별 선택 상비약
+            <span id="optional-count" class="text-xs font-normal text-slate-400"></span>
+          </span>
+          <span id="optional-chevron" class="text-xs font-normal text-brand-600 no-print">▼ 펼치기</span>
+        </button>
+        <div id="optional-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </div>
+
+      <!-- 면책 문구 (고정) -->
+      <div class="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-800 leading-relaxed">
+        <strong>⚠️ 안내 (반드시 확인)</strong><br />
+        본 결과는 <b>일반의약품 정보 제공용</b>이며 의학적 진단·처방이 아닙니다. 표시된 용량은 <b>성인 일반 기준</b>으로,
+        실제 복용 가능 여부·용량은 반드시 <b>의사·약사와 상담</b>하세요.
+        소아·고령자·임산부·기저질환자는 용량 조절이 필요합니다.
+        고열·혈변·호흡곤란·증상 악화 시 즉시 현지 병원 진료를 받으세요.
+        전문의약품(고산병 예방약, 말라리아약 등)은 출발 전 의사 처방이 필요합니다.
+      </div>
+    </section>
+  </main>
+
+    <div class="sc-wheels" aria-hidden="true"><span></span><span></span></div>
+  </div>
+
+  <!-- 모달 -->
+  <div id="modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50 no-print">
+    <div class="bg-white rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto shadow-xl">
+      <div id="modal-body" class="p-5"></div>
+      <div class="px-5 pb-5">
+        <button id="modal-close" class="w-full py-2.5 rounded-lg bg-[#bfe6fd] text-black font-semibold hover:brightness-95">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center text-xs text-slate-400 py-6 no-print">
+    Day 3 미니 프로젝트 · 여행 상비약 가이드 · 데이터 출처: 식약처 의약품안전나라 등 일반의약품 정보
+  </footer>
+
+  <script>
+  // ===================== 데이터 =====================
+  const DESTINATIONS = [
+    { id:'city',     icon:'🏙️', label:'일반 도시',     note:'기본 상비약 위주' },
+    { id:'resort',   icon:'🏖️', label:'더운 휴양지',   note:'더위·탈수·물갈이·벌레 대비' },
+    { id:'hygiene',  icon:'⚠️', label:'위생 유의 국가', note:'물갈이 설사·장 트러블 대비가 핵심' },
+    { id:'altitude', icon:'⛰️', label:'고산 지대',     note:'일교차 감기·두통 대비 (고산병약은 사전 처방)' },
+    { id:'cold',     icon:'❄️', label:'한랭지',        note:'추위·건조·감기 대비 (겨울/극지/설원)' },
+    { id:'jungle',   icon:'🌴', label:'열대 정글',     note:'모기 매개 질환·습한 상처 대비' },
+    { id:'desert',   icon:'🏜️', label:'사막·건조지',   note:'탈수·일교차 대비 (수분 보충 중요)' },
+    { id:'marine',   icon:'🤿', label:'섬·해양 레저',  note:'멀미·물놀이 상처·산호 찰과상 대비' },
+  ];
+
+  // 환경 프로필 한글 라벨
+  const PROFILE_LABEL = { city:'일반 도시', resort:'더운 휴양지', hygiene:'위생 유의', altitude:'고산', cold:'한랭지', jungle:'열대 정글', desert:'사막/건조', marine:'섬·해양' };
+
+  // 국가 → 환경 프로필 매핑 (인기 여행지 위주). advisory: 국가 고유 주의(전문 상담 안내)
+  // regions: 국가 내 권역별 세분화(있으면 '전체' + 지역 선택). 지역 선택 시 해당 profiles/advisory 우선.
+  const COUNTRIES = [
+    { id:'jp', label:'일본',          profiles:['city'], regions:[
+        { id:'jp-main', label:'도쿄·오사카',   profiles:['city'] },
+        { id:'jp-oki',  label:'오키나와',      profiles:['marine','resort'] },
+        { id:'jp-hok',  label:'홋카이도',      profiles:['cold','city'], advisory:'겨울철 한파·빙판 — 방한·미끄럼 부상 대비.' },
+      ] },
+    { id:'tw', label:'대만',          profiles:['city','resort'] },
+    { id:'cn', label:'중국',          profiles:['city','hygiene'], regions:[
+        { id:'cn-east', label:'베이징·상하이', profiles:['city','hygiene'] },
+        { id:'cn-tibet',label:'티베트',        profiles:['altitude'], advisory:'라싸 등 고산지대 — 고산병약은 출발 전 의사 상담.' },
+        { id:'cn-yun',  label:'윈난·구이린',   profiles:['resort','hygiene'] },
+      ] },
+    { id:'hk', label:'홍콩',          profiles:['city','resort'] },
+    { id:'th', label:'태국',          profiles:['resort','hygiene'], advisory:'일부 지역 뎅기열·말라리아 — 모기 기피제 필수, 예방약은 출발 전 의사 상담.', regions:[
+        { id:'th-bkk',  label:'방콕',          profiles:['city','hygiene'] },
+        { id:'th-phu',  label:'푸켓·끄라비',   profiles:['marine','resort','hygiene'] },
+        { id:'th-cnx',  label:'치앙마이(북부)', profiles:['city','resort'] },
+      ] },
+    { id:'vn', label:'베트남',        profiles:['resort','hygiene'], advisory:'일부 지역 뎅기열 — 모기 대비 권장.' },
+    { id:'ph', label:'필리핀',        profiles:['resort','hygiene'], advisory:'일부 도서 지역 말라리아·뎅기열 — 모기 대비, 예방약은 출발 전 상담.' },
+    { id:'id', label:'인도네시아',    profiles:['resort','hygiene'], regions:[
+        { id:'id-bali', label:'발리·자카르타', profiles:['resort','hygiene'] },
+        { id:'id-papua',label:'파푸아·정글',   profiles:['jungle','hygiene'], advisory:'정글 지역 말라리아 — 모기 기피제 필수, 예방약은 출발 전 상담.' },
+      ] },
+    { id:'kh', label:'캄보디아',      profiles:['resort','hygiene'], advisory:'일부 지역 말라리아 — 예방약은 출발 전 의사 상담.' },
+    { id:'la', label:'라오스',        profiles:['resort','hygiene'], advisory:'일부 지역 말라리아·뎅기열 — 모기 대비 권장.' },
+    { id:'my', label:'말레이시아',    profiles:['resort','hygiene'] },
+    { id:'sg', label:'싱가포르',      profiles:['city','resort'] },
+    { id:'in', label:'인도',          profiles:['hygiene','resort'], advisory:'식수·음식 위생 매우 중요. 일부 지역 말라리아 — 출발 전 상담.', regions:[
+        { id:'in-north',label:'델리·뭄바이',   profiles:['hygiene','city'] },
+        { id:'in-leh',  label:'라다크(레)',    profiles:['altitude','hygiene'], advisory:'레·라다크 고산지대 — 고산병약은 출발 전 의사 상담.' },
+        { id:'in-goa',  label:'고아(해변)',    profiles:['marine','resort','hygiene'] },
+      ] },
+    { id:'np', label:'네팔',          profiles:['altitude','hygiene'], advisory:'고산 트레킹 시 고산병약(전문의약품)은 출발 전 의사 처방 필요.', regions:[
+        { id:'np-ktm',  label:'카트만두',      profiles:['city','hygiene'] },
+        { id:'np-trek', label:'히말라야 트레킹', profiles:['altitude','cold','hygiene'], advisory:'에베레스트·안나푸르나 트레킹 — 고산병약은 출발 전 의사 처방, 방한 필수.' },
+      ] },
+    { id:'mn', label:'몽골',          profiles:['city','altitude'] },
+    { id:'pe', label:'페루',          profiles:['altitude','hygiene'], advisory:'쿠스코·마추픽추 등 고산지대 — 고산병약은 출발 전 의사 상담.', regions:[
+        { id:'pe-lima', label:'리마(해안)',    profiles:['city','hygiene'] },
+        { id:'pe-cusco',label:'쿠스코·마추픽추', profiles:['altitude','hygiene'], advisory:'해발 3,400m 고산 — 고산병약은 출발 전 의사 상담, 도착 후 천천히 적응.' },
+        { id:'pe-amaz', label:'아마존(이키토스)', profiles:['jungle','hygiene'], advisory:'아마존 정글 — 말라리아·황열 위험, 예방접종·예방약은 출발 전 상담.' },
+      ] },
+    { id:'bo', label:'볼리비아',      profiles:['altitude','hygiene'], advisory:'라파스 등 고산지대 — 고산병약은 출발 전 의사 상담.' },
+    { id:'mx', label:'멕시코',        profiles:['resort','hygiene'], regions:[
+        { id:'mx-city', label:'멕시코시티',    profiles:['city','altitude'], advisory:'해발 2,200m — 가벼운 고산 증상 가능.' },
+        { id:'mx-cancun',label:'칸쿤·툴룸',    profiles:['marine','resort','hygiene'] },
+      ] },
+    { id:'us', label:'미국',          profiles:['city'], regions:[
+        { id:'us-main', label:'본토 도시',     profiles:['city'] },
+        { id:'us-rocky',label:'콜로라도·덴버', profiles:['city','altitude'], advisory:'로키산맥 고지대 — 가벼운 고산 증상 가능.' },
+        { id:'us-hi',   label:'하와이',        profiles:['marine','resort'] },
+        { id:'us-ak',   label:'알래스카',      profiles:['cold','city'], advisory:'한랭지 — 방한·건조 피부 대비.' },
+      ] },
+    { id:'ca', label:'캐나다',        profiles:['city','cold'] },
+    { id:'fr', label:'프랑스',        profiles:['city'] },
+    { id:'it', label:'이탈리아',      profiles:['city'] },
+    { id:'es', label:'스페인',        profiles:['city','resort'] },
+    { id:'gb', label:'영국',          profiles:['city'] },
+    { id:'de', label:'독일',          profiles:['city'] },
+    { id:'ch', label:'스위스',        profiles:['city','altitude'], advisory:'알프스 고지대 트레킹 시 두통·일교차 대비.', regions:[
+        { id:'ch-city', label:'도시(취리히 등)', profiles:['city'] },
+        { id:'ch-alps', label:'알프스 고지대',  profiles:['altitude','cold','city'], advisory:'융프라우·체르마트 등 고지대 — 두통·추위 대비.' },
+      ] },
+    { id:'gr', label:'그리스',        profiles:['city','resort'] },
+    { id:'tr', label:'튀르키예',      profiles:['city','resort'] },
+    { id:'eg', label:'이집트',        profiles:['resort','hygiene','desert'], advisory:'식수 위생 주의(생수 권장). 사막 지역 탈수 대비.' },
+    { id:'ma', label:'모로코',        profiles:['city','hygiene','desert'] },
+    { id:'ke', label:'케냐/탄자니아', profiles:['resort','hygiene','altitude'], advisory:'사파리·킬리만자로 지역 말라리아·고산 — 예방약은 출발 전 의사 상담.', regions:[
+        { id:'ke-safari',label:'사파리(초원)',  profiles:['resort','hygiene'], advisory:'말라리아·뎅기열 위험 — 모기 기피제 필수, 예방약은 출발 전 상담.' },
+        { id:'ke-kili', label:'킬리만자로',    profiles:['altitude','cold'], advisory:'해발 5,895m 등반 — 고산병약은 출발 전 의사 상담, 방한 필수.' },
+        { id:'ke-zan',  label:'잔지바르·몸바사', profiles:['marine','resort','hygiene'], advisory:'해안 지역 말라리아 위험 — 모기 대비.' },
+      ] },
+    { id:'au', label:'호주',          profiles:['city','resort','marine'] },
+    { id:'nz', label:'뉴질랜드',      profiles:['city','cold'] },
+    { id:'gu', label:'괌/사이판',     profiles:['marine','resort'] },
+    { id:'hi', label:'하와이',        profiles:['marine','resort'] },
+    { id:'ae', label:'두바이(UAE)',   profiles:['city','resort','desert'], advisory:'사막 기후 — 탈수·강한 일사 대비.' },
+  ];
+
+  const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
+
+  // 국가별 기후: type(temperate 온대 / tropical 열대 / arid 건조 / highland 고산 / cold 한대),
+  // hemi(N 북반구 / S 남반구), rainy(우기 월 목록 — 열대권)
+  const CLIMATE = {
+    jp:{type:'temperate',hemi:'N'}, tw:{type:'tropical',hemi:'N',rainy:[5,6,7,8,9]},
+    cn:{type:'temperate',hemi:'N'}, hk:{type:'tropical',hemi:'N',rainy:[5,6,7,8,9]},
+    th:{type:'tropical',hemi:'N',rainy:[6,7,8,9,10]}, vn:{type:'tropical',hemi:'N',rainy:[5,6,7,8,9,10]},
+    ph:{type:'tropical',hemi:'N',rainy:[6,7,8,9,10,11]}, id:{type:'tropical',hemi:'S',rainy:[11,12,1,2,3]},
+    kh:{type:'tropical',hemi:'N',rainy:[6,7,8,9,10]}, la:{type:'tropical',hemi:'N',rainy:[6,7,8,9]},
+    my:{type:'tropical',hemi:'N',rainy:[10,11,12,1,2]}, sg:{type:'tropical',hemi:'N',rainy:[11,12,1]},
+    in:{type:'tropical',hemi:'N',rainy:[6,7,8,9]}, np:{type:'highland',hemi:'N',rainy:[6,7,8,9]},
+    mn:{type:'temperate',hemi:'N'}, pe:{type:'tropical',hemi:'S'}, bo:{type:'highland',hemi:'S'},
+    mx:{type:'tropical',hemi:'N',rainy:[6,7,8,9]}, us:{type:'temperate',hemi:'N'}, ca:{type:'temperate',hemi:'N'},
+    fr:{type:'temperate',hemi:'N'}, it:{type:'temperate',hemi:'N'}, es:{type:'temperate',hemi:'N'},
+    gb:{type:'temperate',hemi:'N'}, de:{type:'temperate',hemi:'N'}, ch:{type:'temperate',hemi:'N'},
+    gr:{type:'temperate',hemi:'N'}, tr:{type:'temperate',hemi:'N'}, eg:{type:'arid',hemi:'N'},
+    ma:{type:'arid',hemi:'N'}, ke:{type:'tropical',hemi:'S',rainy:[3,4,5,11,12]}, au:{type:'temperate',hemi:'S'},
+    nz:{type:'temperate',hemi:'S'}, gu:{type:'tropical',hemi:'N',rainy:[7,8,9,10,11]}, hi:{type:'tropical',hemi:'N'},
+    ae:{type:'arid',hemi:'N'},
+  };
+
+  // 시각적 복약 지도 픽토그램 (모달에서 그림으로 표시)
+  const VISUAL_ICONS = {
+    afterMeal:   { e:'🍽️', t:'식후 복용' },
+    withFood:    { e:'🍚', t:'음식과 함께' },
+    water:       { e:'💧', t:'물과 함께' },
+    cleanWater:  { e:'🚰', t:'깨끗한 물에' },
+    beforeTravel:{ e:'🚗', t:'이동 30분 전' },
+    noAlcohol:   { e:'🚱', t:'음주 금지' },
+    drowsy:      { e:'😴', t:'졸음 주의' },
+    noDrive:     { e:'🚙', t:'운전 주의' },
+    maxDose:     { e:'🔢', t:'1일 최대량 준수' },
+    noOverlap:   { e:'⚠️', t:'성분 중복 주의' },
+    shortUse:    { e:'⏳', t:'단기만 복용' },
+    stopBlood:   { e:'🩸', t:'혈변·고열 시 중단' },
+    external:    { e:'🩹', t:'바르는 외용약' },
+    disinfect:   { e:'🧴', t:'소독 후 도포' },
+    asNeeded:    { e:'🔁', t:'필요시 보충' },
+    beforeSleep: { e:'🛌', t:'취침 30분 전' },
+  };
+
+  // 약국 요청 문구 (브랜드명 대신 성분·계열로 요청 — 해외에서도 통용)
+  const PHARMACY_ASK = {
+    acetaminophen:'아세트아미노펜 성분 해열진통제 주세요',
+    ibuprofen:'이부프로펜 성분 소염진통제 주세요',
+    loperamide:'로페라미드 성분 지사제 주세요',
+    probiotics:'여행자 설사용 정장제와 경구수분보충염(ORS) 주세요',
+    cold:'종합감기약 주세요',
+    cetirizine:'세티리진 같은 항히스타민제(알레르기약) 주세요',
+    dimenhydrinate:'멀미약(디멘히드리네이트 성분) 주세요',
+    wound:'상처 소독약과 항생연고, 밴드 주세요',
+    antacid:'속쓰림·소화불량에 먹는 제산제 주세요',
+    laxative:'여행 변비에 먹는 변비약 주세요',
+    eyedrop:'인공눈물(점안액) 주세요',
+    sunburn:'일광화상에 바르는 화상연고나 알로에 진정젤 주세요',
+    sleepaid:'시차 적응용 수면유도제 또는 멜라토닌 주세요',
+    painpatch:'근육통에 붙이는 소염진통 파스 주세요',
+  };
+
+  // 국가 → 현지 언어 (tr에 해당 코드 번역이 없으면 국제 일반명(영문)으로 폴백)
+  const LANG_BY_COUNTRY = {
+    jp:{code:'ja',name:'일본어'},
+    tw:{code:'zh',name:'중국어'}, cn:{code:'zh',name:'중국어'}, hk:{code:'zh',name:'중국어'},
+    th:{code:'th',name:'태국어'}, vn:{code:'vi',name:'베트남어'},
+    id:{code:'id',name:'인도네시아어'}, my:{code:'ms',name:'말레이어'},
+    sg:{code:'en',name:'영어'}, in:{code:'en',name:'영어'},
+    np:{code:'ne',name:'네팔어'}, mn:{code:'mn',name:'몽골어'},
+    pe:{code:'es',name:'스페인어'}, bo:{code:'es',name:'스페인어'}, mx:{code:'es',name:'스페인어'}, es:{code:'es',name:'스페인어'},
+    us:{code:'en',name:'영어'}, ca:{code:'en',name:'영어'}, gb:{code:'en',name:'영어'}, au:{code:'en',name:'영어'}, nz:{code:'en',name:'영어'},
+    fr:{code:'fr',name:'프랑스어'}, it:{code:'it',name:'이탈리아어'},
+    de:{code:'de',name:'독일어'}, ch:{code:'de',name:'독일어'},
+    gr:{code:'el',name:'그리스어'}, tr:{code:'tr',name:'튀르키예어'},
+    eg:{code:'ar',name:'아랍어'}, ma:{code:'ar',name:'아랍어'}, ae:{code:'ar',name:'아랍어'},
+    ke:{code:'en',name:'영어'}, gu:{code:'en',name:'영어'}, hi:{code:'en',name:'영어'},
+  };
+
+  // 약 성분명의 국제 일반명(intl, 영문/INN) + 언어별 번역(tr). 없으면 intl로 폴백.
+  const MED_I18N = {
+    acetaminophen:{ intl:'Acetaminophen / Paracetamol', tr:{ es:'Paracetamol', fr:'Paracétamol', de:'Paracetamol', it:'Paracetamolo', ja:'アセトアミノフェン（パラセタモール）', zh:'对乙酰氨基酚（扑热息痛）' } },
+    ibuprofen:{ intl:'Ibuprofen', tr:{ es:'Ibuprofeno', fr:'Ibuprofène', de:'Ibuprofen', it:'Ibuprofene', ja:'イブプロフェン', zh:'布洛芬' } },
+    loperamide:{ intl:'Loperamide', tr:{ es:'Loperamida', fr:'Lopéramide', de:'Loperamid', it:'Loperamide', ja:'ロペラミド', zh:'洛哌丁胺' } },
+    probiotics:{ intl:'Probiotics & Oral Rehydration Salts (ORS)', tr:{ es:'Probióticos y Sales de Rehidratación Oral (SRO)', fr:'Probiotiques et Sels de Réhydratation Orale (SRO)', de:'Probiotika & Orale Rehydratationslösung (ORS)', it:'Probiotici e Sali di Reidratazione Orale (SRO)', ja:'整腸剤・経口補水塩（ORS）', zh:'益生菌、口服补液盐（ORS）' } },
+    cold:{ intl:'Cold & flu combination medicine', tr:{ es:'Medicamento combinado para resfriado', fr:'Médicament combiné rhume et grippe', de:'Erkältungs-Kombipräparat', it:'Medicinale combinato per raffreddore', ja:'総合感冒薬（かぜ薬）', zh:'复方感冒药' } },
+    cetirizine:{ intl:'Cetirizine (antihistamine)', tr:{ es:'Cetirizina', fr:'Cétirizine', de:'Cetirizin', it:'Cetirizina', ja:'セチリジン（抗ヒスタミン薬）', zh:'西替利嗪（抗组胺药）' } },
+    dimenhydrinate:{ intl:'Dimenhydrinate (motion sickness)', tr:{ es:'Dimenhidrinato', fr:'Diménhydrinate', de:'Dimenhydrinat', it:'Dimenidrinato', ja:'ジメンヒドリナート（酔い止め）', zh:'茶苯海明（晕车药）' } },
+    wound:{ intl:'Antiseptic, antibiotic ointment & bandages', tr:{ es:'Antiséptico, pomada antibiótica y vendas', fr:'Antiseptique, pommade antibiotique et pansements', de:'Antiseptikum, antibiotische Salbe & Pflaster', it:'Antisettico, pomata antibiotica e cerotti', ja:'消毒薬・抗菌軟膏・絆創膏', zh:'消毒液、抗生素软膏、创可贴' } },
+    antacid:{ intl:'Antacid', tr:{ es:'Antiácido', fr:'Antiacide', de:'Antazidum', it:'Antiacido', ja:'制酸薬（胃薬）', zh:'抗酸剂（胃药）' } },
+    laxative:{ intl:'Laxative', tr:{ es:'Laxante', fr:'Laxatif', de:'Abführmittel', it:'Lassativo', ja:'便秘薬（下剤）', zh:'通便药（泻药）' } },
+    eyedrop:{ intl:'Artificial tears (eye drops)', tr:{ es:'Lágrimas artificiales (colirio)', fr:'Larmes artificielles (collyre)', de:'Künstliche Tränen (Augentropfen)', it:'Lacrime artificiali (collirio)', ja:'人工涙液（目薬）', zh:'人工泪液（眼药水）' } },
+    sunburn:{ intl:'After-sun / burn soothing gel (e.g. aloe)', tr:{ es:'Gel calmante para quemaduras solares (aloe)', fr:'Gel apaisant coups de soleil (aloe)', de:'After-Sun-/Brand-Gel (Aloe)', it:'Gel lenitivo doposole (aloe)', ja:'日焼け・やけど用ジェル（アロエ等）', zh:'晒后/烫伤舒缓凝胶（芦荟等）' } },
+    sleepaid:{ intl:'Sleep aid / Melatonin', tr:{ es:'Inductor del sueño / Melatonina', fr:'Somnifère / Mélatonine', de:'Schlafmittel / Melatonin', it:'Sonnifero / Melatonina', ja:'睡眠改善薬・メラトニン', zh:'助眠药、褪黑素' } },
+    painpatch:{ intl:'Topical anti-inflammatory patch/gel (NSAID)', tr:{ es:'Parche/gel antiinflamatorio tópico', fr:'Patch/gel anti-inflammatoire topique', de:'Schmerzpflaster/-gel (NSAR)', it:'Cerotto/gel antinfiammatorio topico', ja:'消炎鎮痛シップ・ゲル', zh:'外用消炎镇痛贴、凝胶' } },
+  };
+
+  // 선택한 국가의 언어로 성분명 반환 (없으면 국제 일반명 폴백)
+  function localizedIngredient(m) {
+    const info = MED_I18N[m.id] || { intl: m.ingredient, tr:{} };
+    const c = (state.mode === 'country') ? currentCountry() : null;
+    const lang = c ? LANG_BY_COUNTRY[c.id] : null;
+    if (lang) {
+      if (info.tr && info.tr[lang.code]) return { text: info.tr[lang.code], label: lang.name };
+      if (lang.code === 'en') return { text: info.intl, label: '영어' };
+      return { text: info.intl, label: '영문 성분명' };  // 해당 언어 미지원 → 영문(INN)
+    }
+    return { text: info.intl, label: '국제 일반명(영문)' };
+  }
+
+  const COMPANIONS = ['성인','아동','고령자','임산부'];
+
+  const SYMPTOMS = [
+    { id:'fever',    label:'발열·두통' },
+    { id:'diarr',    label:'설사·복통' },
+    { id:'cold',     label:'콧물·기침' },
+    { id:'allergy',  label:'알레르기·가려움' },
+    { id:'motion',   label:'멀미' },
+    { id:'wound',    label:'상처·물집' },
+    { id:'indigest', label:'소화불량·속쓰림' },
+    { id:'constip',  label:'변비' },
+    { id:'muscle',   label:'근육·관절통' },
+    { id:'eye',      label:'눈 건조·이물감' },
+    { id:'burn',     label:'햇볕 화상' },
+    { id:'sleep',    label:'불면·시차' },
+  ];
+
+  // env: 여행지별 가중치(0~3), symptoms: 관련 증상, dosage: 성인 일반 기준
+  const MEDS = [
+    {
+      id:'acetaminophen', icon:'🌡️', category:'해열진통제', ingredient:'아세트아미노펜',
+      drugClass:'비마약성 해열·진통제', purpose:'발열·두통·근육통 완화',
+      baseline:true, env:{city:1,resort:1,hygiene:1,altitude:2,cold:2,jungle:1,desert:2,marine:1}, symptoms:['fever'],
+      dosage:'성인 1회 500~1000mg, 4~6시간 간격 · 1일 최대 4,000mg 이하',
+      freq:'1일 3~4회', interval:'4~6시간 간격', visual:['water','noAlcohol','maxDose','noOverlap'],
+      cautions:['1일 최대 용량 초과 시 간 손상 위험 — 종합감기약 등 다른 약과 성분 중복 주의','음주 후 복용 피하기'],
+      companion:{ '아동':'소아는 체중 기준 용량 — 소아용 시럽으로 약사 상담','임산부':'비교적 안전하나 복용 전 상담 권장' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'ibuprofen', icon:'💪', category:'해열진통제', ingredient:'이부프로펜',
+      drugClass:'비스테로이드성 소염진통제(NSAIDs)', purpose:'근육통·관절통·발열·염증 완화',
+      env:{city:1,resort:2,hygiene:1,altitude:1,cold:1,jungle:1,desert:1,marine:1}, symptoms:['fever'],
+      dosage:'성인 1회 200~400mg, 4~6시간 간격 · 1일 최대 1,200mg 이하(일반의약품 기준)',
+      freq:'1일 3회', interval:'4~6시간 간격', visual:['withFood','water','maxDose','noOverlap'],
+      cautions:['공복 복용 시 위장장애 — 음식과 함께 복용','위궤양·신장질환·천식 환자는 복용 전 상담'],
+      companion:{ '아동':'생후 6개월 미만 금기 — 소아 용량은 약사 상담 필수','고령자':'위장출혈·신장 기능 저하 위험 — 주의','임산부':'임신 후기(28주~) 금기 — 복용 금지, 반드시 상담' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'loperamide', icon:'🚽', category:'지사제/정장제', ingredient:'로페라미드',
+      drugClass:'지사제(장운동 억제)', purpose:'여행자 설사·묽은 변 증상 완화',
+      env:{city:0,resort:2,hygiene:3,altitude:0,cold:0,jungle:2,desert:1,marine:1}, symptoms:['diarr'],
+      dosage:'성인 첫 회 4mg(2캡슐), 이후 묽은 변마다 2mg · 1일 최대 8mg 이하',
+      freq:'묽은 변마다', interval:null, visual:['water','shortUse','stopBlood','maxDose'],
+      cautions:['고열·혈변 동반 설사에는 사용 금지 — 감염 가능성, 병원 진료','장기 복용 금지, 증상 호전 시 중단'],
+      companion:{ '아동':'만 2세 미만 금기 — 소아는 반드시 상담','임산부':'복용 전 상담 필요' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'probiotics', icon:'🦠', category:'지사제/정장제', ingredient:'정장제(유산균)·ORS',
+      drugClass:'정장 보조 · 수분/전해질 보충', purpose:'물갈이·장 트러블 완화, 설사 시 탈수 예방',
+      env:{city:1,resort:2,hygiene:3,altitude:0,cold:0,jungle:2,desert:3,marine:2}, symptoms:['diarr'],
+      dosage:'정장제는 제품 표기 용법 준수 · ORS는 깨끗한 물에 정량으로 녹여 수시 보충',
+      freq:null, interval:null, visual:['cleanWater','asNeeded'],
+      cautions:['설사가 심하거나 2~3일 이상 지속되면 병원 진료','ORS는 반드시 위생적인 물 사용'],
+      companion:{ '고령자':'탈수에 특히 취약 — 수분 보충 적극 권장' },
+      source:'식약처/WHO 경구수분보충 권장'
+    },
+    {
+      id:'cold', icon:'🤧', category:'종합감기약', ingredient:'종합감기약(복합)',
+      drugClass:'해열·진통·콧물·기침 복합제', purpose:'콧물·기침·발열 등 감기 증상 완화',
+      env:{city:1,resort:0,hygiene:0,altitude:2,cold:3,jungle:0,desert:1,marine:0}, symptoms:['cold','fever'],
+      dosage:'성인 1회 1포/1정, 1일 3회 식후 (제품 표기 준수) · 다른 해열제와 중복 복용 금지',
+      freq:'1일 3회', interval:null, visual:['afterMeal','water','drowsy','noOverlap'],
+      cautions:['아세트아미노펜 등과 성분 중복 가능 — 다른 해열제와 동시 복용 주의','졸음 성분 포함 가능 — 운전·도보 이동 전 확인'],
+      companion:{ '아동':'성인용 금지 — 소아 전용 제품 사용','임산부':'성분이 다양하므로 복용 전 반드시 상담' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'cetirizine', icon:'🐛', category:'항히스타민제/멀미약', ingredient:'세티리진(항히스타민제)',
+      drugClass:'2세대 항히스타민제', purpose:'벌레 물림·알레르기 가려움·콧물 완화',
+      env:{city:1,resort:2,hygiene:1,altitude:0,cold:0,jungle:3,desert:0,marine:1}, symptoms:['allergy','cold'],
+      dosage:'성인 1회 10mg, 1일 1회',
+      freq:'1일 1회', interval:null, visual:['water','drowsy'],
+      cautions:['졸음이 올 수 있음 — 활동 전 주의','신장질환자는 용량 조절 필요 — 상담'],
+      companion:{ '아동':'연령별 용량이 다름 — 소아용 확인','임산부':'복용 전 상담 권장' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'dimenhydrinate', icon:'🚌', category:'항히스타민제/멀미약', ingredient:'디멘히드리네이트(멀미약)',
+      drugClass:'1세대 항히스타민계 멀미약', purpose:'차·비행기·배 멀미 예방 및 완화',
+      env:{city:1,resort:1,hygiene:1,altitude:1,cold:1,jungle:1,desert:1,marine:3}, symptoms:['motion'],
+      dosage:'성인 이동 30분~1시간 전 1회 복용 (제품 표기 용량 준수)',
+      freq:'이동 전 1회', interval:null, visual:['beforeTravel','drowsy','noDrive'],
+      cautions:['졸음이 강하게 올 수 있음 — 운전자 복용 주의','녹내장·전립선비대 환자 주의'],
+      companion:{ '아동':'연령 제한 있음 — 소아용 제품/용량 확인','임산부':'복용 전 상담 권장' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'wound', icon:'🩹', category:'상처 케어', ingredient:'소독제·항생연고·밴드',
+      drugClass:'외용 소독·상처 보호', purpose:'찰과상·물집·벌레 물린 상처 소독·보호',
+      baseline:true, env:{city:1,resort:2,hygiene:1,altitude:2,cold:1,jungle:2,desert:1,marine:2}, symptoms:['wound'],
+      dosage:'환부 소독 후 연고 도포, 밴드/거즈로 보호 (외용)',
+      freq:null, interval:null, visual:['external','disinfect'],
+      cautions:['깊은 상처·동물 교상은 자가 처치 후 병원 진료','연고 사용 후 발진 시 중단'],
+      companion:{},
+      source:'일반 응급처치 권장'
+    },
+    {
+      id:'antacid', icon:'🥤', category:'소화제/위장약', ingredient:'제산제(알마게이트 등)',
+      drugClass:'제산·위점막 보호제', purpose:'속쓰림·소화불량·과식 후 더부룩함 완화',
+      env:{city:1,resort:1,hygiene:2,altitude:1,cold:1,jungle:1,desert:1,marine:1}, symptoms:['indigest'],
+      dosage:'성인 1회 1포, 식간 및 취침 전 (제품 표기 용법 준수)',
+      freq:'1일 3~4회', interval:'식간·취침 전', visual:['water','noOverlap'],
+      cautions:['다른 약과 1~2시간 간격 두기(흡수 방해 가능)','2주 이상 지속되는 증상은 상담'],
+      companion:{ '임산부':'복용 전 상담 권장' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'laxative', icon:'🧻', category:'소화제/위장약', ingredient:'변비약(차전자피·마그네슘계)',
+      drugClass:'팽창성·삼투성 완하제', purpose:'여행 중 변비 완화',
+      env:{city:1,resort:1,hygiene:1,altitude:1,cold:1,jungle:1,desert:1,marine:1}, symptoms:['constip'],
+      dosage:'성인 제품 표기 용량을 충분한 물과 함께 복용',
+      freq:'1일 1회', interval:null, visual:['water','shortUse'],
+      cautions:['반드시 충분한 물과 함께 복용','복통·혈변 동반 시 중단하고 진료'],
+      companion:{ '아동':'소아용 제품/용량 약사 상담','임산부':'복용 전 상담 권장' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'eyedrop', icon:'👁️', category:'눈·코 케어', ingredient:'인공눈물(점안액)',
+      drugClass:'안구 윤활 점안제', purpose:'건조한 기내·사막·먼지로 인한 안구건조·이물감 완화',
+      env:{city:1,resort:1,hygiene:1,altitude:2,cold:2,jungle:1,desert:3,marine:1}, symptoms:['eye'],
+      dosage:'1회 1~2방울 필요시 점안 (외용)',
+      freq:null, interval:null, visual:['external','asNeeded'],
+      cautions:['개봉 후 보관기간 준수','콘택트렌즈 착용 시 제품 적합성 확인'],
+      companion:{},
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'sunburn', icon:'🧴', category:'피부 케어', ingredient:'화상연고·알로에 진정젤',
+      drugClass:'외용 진정·보습제', purpose:'일광화상·가벼운 화상·피부 진정',
+      env:{city:0,resort:3,hygiene:0,altitude:1,cold:0,jungle:1,desert:2,marine:3}, symptoms:['burn'],
+      dosage:'환부를 차갑게 식힌 뒤 얇게 도포 (외용)',
+      freq:null, interval:null, visual:['external'],
+      cautions:['물집은 터뜨리지 않기','넓은 부위 화상·발열 동반 시 병원 진료'],
+      companion:{},
+      source:'일반 응급처치 권장'
+    },
+    {
+      id:'sleepaid', icon:'🛌', category:'시차·수면', ingredient:'수면유도제(또는 멜라토닌)',
+      drugClass:'수면 보조(항히스타민계/멜라토닌)', purpose:'장거리 시차 적응·일시적 불면 완화',
+      env:{city:1,resort:0,hygiene:0,altitude:0,cold:0,jungle:0,desert:0,marine:0}, symptoms:['sleep'],
+      dosage:'취침 30분 전 1회 (제품 표기 용량 준수)',
+      freq:'취침 전 1회', interval:null, visual:['beforeSleep','noDrive','noAlcohol'],
+      cautions:['다음날 졸음 — 운전 주의','음주 병용 금지, 단기만 사용'],
+      companion:{ '아동':'소아 사용 금지 — 상담','고령자':'낙상·어지럼 주의 — 상담','임산부':'복용 전 상담' },
+      source:'식약처 의약품안전나라'
+    },
+    {
+      id:'painpatch', icon:'🦵', category:'근육·관절 케어', ingredient:'외용 소염진통 파스/겔',
+      drugClass:'외용 NSAIDs 첩부·도포제', purpose:'도보·트레킹 후 근육통·관절통·삔 곳 완화',
+      env:{city:1,resort:1,hygiene:1,altitude:2,cold:1,jungle:1,desert:1,marine:1}, symptoms:['muscle'],
+      dosage:'환부에 부착 또는 도포, 1일 1~2회 (외용)',
+      freq:'1일 1~2회', interval:null, visual:['external'],
+      cautions:['상처·발진 부위 사용 금지','부착 부위 햇빛 노출 시 광과민 주의'],
+      companion:{ '임산부':'외용도 복용 전 상담 권장' },
+      source:'식약처 의약품안전나라'
+    },
+  ];
+
+  // ===================== 상태 =====================
+  // mode: 'type'(환경 유형) | 'country'(국가). region: 국가 내 권역. month: 여행 월(1~12, 선택)
+  const state = { mode:'type', dest:'resort', country:null, region:null, month:null, companions:new Set(['성인']), symptoms:new Set() };
+
+  function currentCountry() { return COUNTRIES.find(x => x.id === state.country) || null; }
+  function currentRegion() {
+    const c = currentCountry();
+    if (!c || !c.regions || !state.region) return null;
+    return c.regions.find(r => r.id === state.region) || null;
+  }
+
+  // 현재 선택의 활성 환경 프로필 목록 (지역 선택 시 지역 우선)
+  function activeProfiles() {
+    if (state.mode === 'country') {
+      const r = currentRegion();
+      if (r) return r.profiles;
+      const c = currentCountry();
+      return c ? c.profiles : ['city'];
+    }
+    return [state.dest];
+  }
+
+  // 현재 국가/지역 고유 주의(advisory) — 지역 우선
+  function currentAdvisory() {
+    if (state.mode !== 'country') return '';
+    const r = currentRegion();
+    if (r) return r.advisory || '';      // 지역 선택 시 그 지역 안내만 (없으면 표시 안 함)
+    const c = currentCountry();
+    return (c && c.advisory) || '';       // '전체' 선택 시 국가 기본 안내
+  }
+
+  // ----- 월 기반 기후 엔진 -----
+  function activeHemisphere() {
+    const c = currentCountry();
+    return (c && CLIMATE[c.id] && CLIMATE[c.id].hemi) || 'N';
+  }
+  // 활성 기후대: 국가 모드면 지역 프로필(고산/사막/정글/한랭) 우선, 아니면 국가 기후, type 모드면 dest로 추론
+  function activeClimateType() {
+    if (state.mode === 'country') {
+      const c = currentCountry();
+      const profs = activeProfiles();
+      if (profs.includes('altitude')) return 'highland';
+      if (profs.includes('desert')) return 'arid';
+      if (profs.includes('jungle')) return 'tropical';
+      if (profs.includes('cold')) return 'cold';
+      return (c && CLIMATE[c.id] && CLIMATE[c.id].type) || 'temperate';
+    }
+    return { resort:'tropical', jungle:'tropical', desert:'arid', altitude:'highland', cold:'cold', city:'temperate', hygiene:'temperate' }[state.dest] || 'temperate';
+  }
+  function isRainyMonth(m) {
+    const c = currentCountry();
+    const r = c && CLIMATE[c.id] && CLIMATE[c.id].rainy;
+    return !!(r && r.includes(m));
+  }
+  // 북반구 기준 계절(남반구는 6개월 시프트)
+  function temperateSeason(m, hemi) {
+    if (hemi === 'S') m = ((m + 5) % 12) + 1;
+    if ([12,1,2].includes(m)) return 'winter';
+    if ([3,4,5].includes(m)) return 'spring';
+    if ([6,7,8].includes(m)) return 'summer';
+    return 'autumn';
+  }
+  // 선택한 월 + 활성 기후 → 증상별 가중치 보정
+  function monthConditions() {
+    const boost = {};
+    const add = (sym, v) => { boost[sym] = Math.max(boost[sym] || 0, v); };
+    if (!state.month) return boost;
+    const m = state.month, type = activeClimateType(), hemi = activeHemisphere();
+    if (type === 'temperate') {
+      const s = temperateSeason(m, hemi);
+      if (s === 'winter') { add('cold', 2); add('fever', 1); }
+      else if (s === 'spring') { add('allergy', 2); }
+      else if (s === 'summer') { add('fever', 1); add('allergy', 1); add('burn', 1); }
+      else { add('allergy', 1); add('cold', 1); }
+    } else if (type === 'tropical') {
+      add('fever', 1); add('diarr', 1); add('burn', 1);
+      if (isRainyMonth(m)) { add('diarr', 1); add('allergy', 1); add('wound', 1); }
+    } else if (type === 'arid') {
+      add('eye', 1);   // 건조 → 안구건조
+      const s = temperateSeason(m, hemi);
+      if (s === 'summer') { add('fever', 1); add('diarr', 1); add('burn', 1); }
+      else if (s === 'winter') { add('cold', 1); }
+      else { add('fever', 1); }
+    } else if (type === 'highland') {
+      const s = temperateSeason(m, hemi);
+      add('cold', s === 'winter' ? 2 : 1);
+      add('eye', 1);   // 강한 자외선·건조
+      if (s === 'winter') add('fever', 1);
+    } else if (type === 'cold') {
+      add('cold', 2); add('fever', 1); add('eye', 1);
+    }
+    return boost;
+  }
+  function monthBoost(med) {
+    const boost = monthConditions();
+    return Math.max(0, ...med.symptoms.map(s => boost[s] || 0));
+  }
+  // 사용자에게 보여줄 그 달의 날씨 요약 라벨
+  function weatherLabel() {
+    if (!state.month) return '';
+    const type = activeClimateType(), hemi = activeHemisphere(), m = state.month;
+    if (type === 'tropical') return isRainyMonth(m) ? '우기·고온다습' : '건기·고온';
+    if (type === 'arid') { const s = temperateSeason(m, hemi); return s === 'summer' ? '폭염·건조' : (s === 'winter' ? '건조·일교차 큼' : '건조·온화'); }
+    if (type === 'highland') { const s = temperateSeason(m, hemi); return s === 'winter' ? '한랭·일교차 큼' : '서늘·일교차 큼'; }
+    if (type === 'cold') return '한랭·건조';
+    const names = { winter:'겨울·한랭', spring:'봄·환절기', summer:'여름·더위', autumn:'가을·환절기' };
+    return names[temperateSeason(m, hemi)];
+  }
+  // 약의 환경 가중치 = 활성 프로필 중 최댓값
+  function envWeight(med) {
+    return Math.max(...activeProfiles().map(p => med.env[p] || 0));
+  }
+
+  // ===================== 렌더: 입력 컨트롤 =====================
+  function renderControls() {
+    // 여행지 유형 버튼 (mode==='type'일 때만 활성 표시)
+    const db = document.getElementById('dest-buttons');
+    db.innerHTML = DESTINATIONS.map(d => {
+      const on = state.mode==='type' && state.dest===d.id;
+      return `
+      <button data-dest="${d.id}" class="dest-btn text-left p-3 rounded-xl border transition ${on?'border-[#bfe6fd] bg-[#bfe6fd] ring-1 ring-[#bfe6fd] text-black':'border-slate-300 text-black hover:border-brand-300'}">
+        <div class="text-xl">${d.icon}</div>
+        <div class="font-semibold text-sm mt-1">${d.label}</div>
+        <div class="text-[11px] text-slate-400 leading-tight mt-0.5">${d.note}</div>
+      </button>`;
+    }).join('');
+    db.querySelectorAll('.dest-btn').forEach(b => b.onclick = () => {
+      state.mode='type'; state.dest=b.dataset.dest; state.country=null; state.region=null;
+      document.getElementById('country-search').value='';
+      renderControls(); renderResults();
+    });
+
+    // 국가 검색 선택 결과(칩) + 세부 지역 버튼
+    renderCountrySelected();
+    renderRegions();
+
+    // 여행 월
+    const mb = document.getElementById('month-buttons');
+    mb.innerHTML = MONTHS.map(m => {
+      const on = state.month===m;
+      return `<button data-month="${m}" class="month-btn py-1.5 rounded-lg text-sm border transition ${on?'bg-[#bfe6fd] text-black border-[#bfe6fd]':'border-slate-300 text-black hover:border-brand-300'}">${m}월</button>`;
+    }).join('');
+    mb.querySelectorAll('.month-btn').forEach(b => b.onclick = () => {
+      const m = Number(b.dataset.month);
+      state.month = (state.month===m) ? null : m;   // 같은 월 재클릭 시 해제
+      renderControls(); renderResults();
+    });
+    // 그 달의 날씨 힌트
+    const wh = document.getElementById('weather-hint');
+    const wl = weatherLabel();
+    wh.textContent = wl ? `🌤️ ${state.month}월 예상 날씨: ${wl}` : '';
+
+    // 동반자
+    const cb = document.getElementById('companion-buttons');
+    cb.innerHTML = COMPANIONS.map(c => {
+      const on = state.companions.has(c);
+      return `<button data-comp="${c}" class="comp-btn px-3 py-1.5 rounded-full text-sm border transition ${on?'bg-[#bfe6fd] text-black border-[#bfe6fd]':'border-slate-300 text-black hover:border-brand-300'}">${on?'✓ ':''}${c}</button>`;
+    }).join('');
+    cb.querySelectorAll('.comp-btn').forEach(b => b.onclick = () => {
+      const c=b.dataset.comp;
+      if (state.companions.has(c)) state.companions.delete(c); else state.companions.add(c);
+      if (state.companions.size===0) state.companions.add('성인');
+      renderControls(); renderResults();
+    });
+
+    // 증상
+    const sb = document.getElementById('symptom-buttons');
+    sb.innerHTML = SYMPTOMS.map(s => {
+      const on = state.symptoms.has(s.id);
+      return `<button data-sym="${s.id}" class="sym-btn px-3 py-1.5 rounded-full text-sm border transition ${on?'bg-[#bfe6fd] text-black border-[#bfe6fd]':'border-slate-300 text-black hover:border-brand-300'}">${on?'✓ ':''}${s.label}</button>`;
+    }).join('');
+    sb.querySelectorAll('.sym-btn').forEach(b => b.onclick = () => {
+      const s=b.dataset.sym;
+      if (state.symptoms.has(s)) state.symptoms.delete(s); else state.symptoms.add(s);
+      renderControls(); renderResults();
+    });
+  }
+
+  // ===================== 국가 검색 =====================
+  function setupCountrySearch() {
+    const input = document.getElementById('country-search');
+    const listEl = document.getElementById('country-list');
+
+    function showList(items) {
+      if (!items.length) { listEl.classList.add('hidden'); return; }
+      listEl.innerHTML = items.map(c => `
+        <button data-country="${c.id}" class="country-row w-full text-left px-3 py-2 hover:bg-brand-50 text-sm flex items-center justify-between">
+          <span>${c.label}</span>
+          <span class="text-[11px] text-slate-400">${c.profiles.map(p=>PROFILE_LABEL[p]).join(' · ')}</span>
+        </button>`).join('');
+      listEl.classList.remove('hidden');
+      listEl.querySelectorAll('.country-row').forEach(b => b.onmousedown = (e) => {
+        e.preventDefault();
+        state.mode='country'; state.country=b.dataset.country; state.region=null;
+        input.value = COUNTRIES.find(c=>c.id===state.country).label;
+        listEl.classList.add('hidden');
+        renderControls(); renderResults();
+      });
+    }
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      const items = q ? COUNTRIES.filter(c => c.label.toLowerCase().includes(q)) : COUNTRIES;
+      showList(items.slice(0, 30));
+    });
+    input.addEventListener('focus', () => showList(COUNTRIES.slice(0, 30)));
+    input.addEventListener('blur', () => setTimeout(()=>listEl.classList.add('hidden'), 150));
+  }
+
+  function renderCountrySelected() {
+    const el = document.getElementById('country-selected');
+    if (state.mode !== 'country') { el.innerHTML = ''; return; }
+    const c = COUNTRIES.find(x => x.id === state.country);
+    if (!c) { el.innerHTML = ''; return; }
+    el.innerHTML = `
+      <span class="inline-flex items-center gap-2 bg-[#bfe6fd] text-black text-sm px-3 py-1.5 rounded-full">
+        🌍 ${c.label}
+        <span class="text-slate-700 text-[11px]">(${c.profiles.map(p=>PROFILE_LABEL[p]).join('·')})</span>
+        <button id="country-clear" class="ml-1 text-black/60 hover:text-black">✕</button>
+      </span>`;
+    document.getElementById('country-clear').onclick = () => {
+      state.mode='type'; state.country=null; state.region=null;
+      document.getElementById('country-search').value='';
+      renderControls(); renderResults();
+    };
+  }
+
+  // 세부 지역 버튼 (국가에 regions가 있을 때만)
+  function renderRegions() {
+    const wrap = document.getElementById('region-wrap');
+    const box = document.getElementById('region-buttons');
+    const c = currentCountry();
+    if (state.mode !== 'country' || !c || !c.regions) {
+      wrap.classList.add('hidden'); box.innerHTML = ''; return;
+    }
+    wrap.classList.remove('hidden');
+    const chip = (id, label, on) =>
+      `<button data-region="${id}" class="region-btn px-3 py-1.5 rounded-full text-sm border transition ${on?'bg-[#bfe6fd] text-black border-[#bfe6fd]':'border-slate-300 text-black hover:border-sky-300'}">${label}</button>`;
+    box.innerHTML =
+      chip('', '전체', !state.region) +
+      c.regions.map(r => chip(r.id, r.label, state.region===r.id)).join('');
+    box.querySelectorAll('.region-btn').forEach(b => b.onclick = () => {
+      state.region = b.dataset.region || null;
+      renderControls(); renderResults();
+    });
+  }
+
+  // ===================== 추천 로직 =====================
+  function scoreMed(med) {
+    let score = envWeight(med) + monthBoost(med);
+    let symMatch = false;
+    state.symptoms.forEach(s => { if (med.symptoms.includes(s)) { score += 3; symMatch = true; } });
+    return { score, symMatch };
+  }
+
+  function classify() {
+    const scored = MEDS.map(m => ({ med:m, ...scoreMed(m) }));
+    // 필수 조건: 증상 매칭 OR 환경 가중치 2 이상 OR 기본 키트(baseline)
+    const isEssential = x => x.symMatch || x.score >= 2 || x.med.baseline;
+    const essential = scored.filter(isEssential).sort((a,b)=>b.score-a.score);
+    const optional  = scored.filter(x => !isEssential(x)).sort((a,b)=>b.score-a.score);
+    return { essential, optional };
+  }
+
+  // ===================== 렌더: 결과 카드 =====================
+  function medCard(x, essential) {
+    const m = x.med;
+    const ring = essential ? 'border-rose-200' : 'border-slate-200';
+    return `
+      <button data-med="${m.id}" class="med-card med-pouch card-pop text-left bg-white border ${ring} rounded-xl p-3 shadow-sm w-full">
+        <div class="flex items-start justify-between">
+          <span class="text-2xl">${m.icon}</span>
+          ${essential
+            ? '<span class="text-[10px] bg-rose-400 text-white px-2 py-0.5 rounded-full font-semibold shadow-sm">⭐ 필수</span>'
+            : '<span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">선택</span>'}
+        </div>
+        <div class="font-bold text-sm mt-2 text-slate-800">${m.ingredient}</div>
+        <div class="text-[11px] text-brand-700 mt-0.5">${m.category}</div>
+        <div class="text-xs text-slate-500 mt-1 leading-snug">${m.purpose}</div>
+        <div class="text-[11px] text-brand-600 mt-2 font-medium no-print">자세히 보기 →</div>
+      </button>`;
+  }
+
+  function renderResults() {
+    const { essential, optional } = classify();
+
+    // 여행지 라벨 + 국가/지역 고유 주의(advisory)
+    let locLabel;
+    const advisory = currentAdvisory();
+    if (state.mode === 'country') {
+      const c = currentCountry();
+      const r = currentRegion();
+      locLabel = r ? `${c.label} · ${r.label}` : c.label;
+      locLabel += ` (${activeProfiles().map(p=>PROFILE_LABEL[p]).join('·')})`;
+    } else {
+      locLabel = DESTINATIONS.find(d=>d.id===state.dest).label;
+    }
+    const monthLabel = state.month ? ` · ${state.month}월(${weatherLabel()})` : '';
+    document.getElementById('result-summary').textContent =
+      `${locLabel}${monthLabel} · ${[...state.companions].join(', ')}` + (state.symptoms.size? ` · 증상 ${state.symptoms.size}개 반영` : '');
+
+    const advEl = document.getElementById('advisory');
+    if (advisory) { advEl.innerHTML = `🌐 <b>국가별 참고</b> · ${advisory}`; advEl.classList.remove('hidden'); }
+    else { advEl.classList.add('hidden'); }
+
+    document.getElementById('essential-grid').innerHTML =
+      essential.length ? essential.map(x=>medCard(x,true)).join('') : '<p class="text-sm text-slate-400 col-span-full">선택한 조건의 필수 약이 없습니다.</p>';
+    document.getElementById('optional-grid').innerHTML =
+      optional.length ? optional.map(x=>medCard(x,false)).join('') : '<p class="text-sm text-slate-400 col-span-full">추가 선택 약이 없습니다.</p>';
+    const _optCount = document.getElementById('optional-count');
+    if (_optCount) _optCount.textContent = optional.length ? `${optional.length}종` : '';
+
+    document.querySelectorAll('.med-card').forEach(b => b.onclick = () => openModal(b.dataset.med));
+  }
+
+  // ===================== 모달 (복약 가이드) =====================
+  function openModal(medId) {
+    const m = MEDS.find(x=>x.id===medId);
+    const compWarn = [...state.companions].filter(c => m.companion[c])
+      .map(c => `<li class="text-amber-700"><b>[${c}]</b> ${m.companion[c]}</li>`).join('');
+
+    // 시각적 복약 지도 픽토그램 (복용 빈도·간격 + 주의 아이콘)
+    const chips = [];
+    if (m.freq) chips.push({ e:'🔁', t:m.freq });
+    if (m.interval) chips.push({ e:'⏱️', t:m.interval });
+    (m.visual || []).forEach(k => { if (VISUAL_ICONS[k]) chips.push(VISUAL_ICONS[k]); });
+    const visualHtml = chips.length ? `
+      <div class="mb-3">
+        <p class="text-xs font-semibold text-brand-700 mb-2">🗺️ 복약 지도 (그림으로 한눈에)</p>
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+          ${chips.map(c => `
+            <div class="flex flex-col items-center justify-center bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+              <span class="text-2xl leading-none">${c.e}</span>
+              <span class="text-[11px] text-slate-600 mt-1 leading-tight">${c.t}</span>
+            </div>`).join('')}
+        </div>
+      </div>` : '';
+
+    const li = localizedIngredient(m);
+    document.getElementById('modal-body').innerHTML = `
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-3xl">${m.icon}</span>
+        <div>
+          <h3 class="text-lg font-bold text-slate-800">${m.ingredient}</h3>
+          <p class="text-xs text-brand-700">${m.category} · ${m.drugClass}</p>
+        </div>
+      </div>
+      <p class="text-sm text-slate-600 mb-3">${m.purpose}</p>
+
+      <div class="bg-brand-50 rounded-lg p-3 mb-3">
+        <p class="text-xs font-semibold text-brand-700 mb-1">💊 복약 가이드 (성인 일반 기준)</p>
+        <p class="text-sm text-slate-700">${m.dosage}</p>
+      </div>
+
+      ${visualHtml}
+
+      <div class="mb-3">
+        <p class="text-xs font-semibold text-rose-600 mb-1">⚠️ 주의 · 금기</p>
+        <ul class="text-sm text-slate-700 list-disc pl-5 space-y-1">
+          ${m.cautions.map(c=>`<li>${c}</li>`).join('')}
+        </ul>
+      </div>
+
+      ${compWarn ? `<div class="mb-3 bg-amber-50 rounded-lg p-3">
+        <p class="text-xs font-semibold text-amber-700 mb-1">👨‍👩‍👧 동반자별 주의 (선택한 동반자)</p>
+        <ul class="text-sm list-disc pl-5 space-y-1">${compWarn}</ul>
+      </div>` : ''}
+
+      <div class="mb-3 bg-brand-50 border border-brand-100 rounded-lg p-3">
+        <p class="text-xs font-semibold text-brand-700 mb-1">🌐 현지 언어 성분명 (${li.label})</p>
+        <p class="text-base font-bold text-slate-800">${li.text}</p>
+        <p class="text-[11px] text-slate-400 mt-1">※ 현지 약국에서 이 이름을 보여주세요. 국제 일반명(INN) 기준입니다.</p>
+      </div>
+
+      <div class="mb-3 bg-sky-50 border border-sky-100 rounded-lg p-3">
+        <p class="text-xs font-semibold text-brand-700 mb-1">🗣️ 약국에서 이렇게 요청하세요</p>
+        <p class="text-sm text-slate-700">"${PHARMACY_ASK[m.id] || (m.ingredient + ' 주세요')}"</p>
+        <p class="text-[11px] text-slate-400 mt-1">※ 해외에서는 성분명을 보여주면 현지 약사가 같은 성분 제품을 찾아줍니다. 특정 브랜드 제품명은 안내하지 않습니다.</p>
+      </div>
+
+      <p class="text-[11px] text-slate-400">출처: ${m.source} · 정확한 복용은 의사·약사와 상담하세요.</p>
+    `;
+    const modal = document.getElementById('modal');
+    modal.classList.remove('hidden'); modal.classList.add('flex');
+  }
+  function closeModal() {
+    const modal = document.getElementById('modal');
+    modal.classList.add('hidden'); modal.classList.remove('flex');
+  }
+
+  // ===================== 인쇄 / 이미지 저장 =====================
+  function saveImage() {
+    const el = document.getElementById('result-section');
+    if (window.__noCanvas || typeof html2canvas === 'undefined') {
+      alert('이미지 저장 라이브러리를 불러오지 못했습니다. 대신 [인쇄 / PDF]로 저장해 주세요.');
+      return;
+    }
+    html2canvas(el, { backgroundColor:'#ffffff', scale:2 }).then(canvas => {
+      const a = document.createElement('a');
+      a.download = '여행상비약_체크리스트.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    }).catch(()=> alert('이미지 저장에 실패했습니다. [인쇄 / PDF]를 이용해 주세요.'));
+  }
+
+  // ===================== 초기화 =====================
+  document.getElementById('modal-close').onclick = closeModal;
+  document.getElementById('modal').onclick = (e)=>{ if(e.target.id==='modal') closeModal(); };
+  document.getElementById('btn-print').onclick = ()=> window.print();
+  document.getElementById('btn-image').onclick = saveImage;
+  document.getElementById('optional-toggle').onclick = () => {
+    const grid = document.getElementById('optional-grid');
+    const chev = document.getElementById('optional-chevron');
+    const btn  = document.getElementById('optional-toggle');
+    const collapsed = grid.classList.toggle('hidden');   // true면 접힘, false면 펼침
+    chev.textContent = collapsed ? '▼ 펼치기' : '▲ 접기';
+    btn.setAttribute('aria-expanded', String(!collapsed));
+  };
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+  setupCountrySearch();
+  renderControls();
+  renderResults();
+
+  // 인트로(캐리어 오프닝) 종료 — 애니메이션 후 제거 + 클릭 시 건너뛰기
+  (function () {
+    const intro = document.getElementById('intro');
+    if (!intro) return;
+    const hide = () => { intro.style.display = 'none'; };
+    intro.addEventListener('click', () => {
+      intro.style.transition = 'opacity .3s ease';
+      intro.style.opacity = '0';
+      setTimeout(hide, 300);
+    });
+    setTimeout(hide, 2900);
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+[
+  {
+    "id": "acetaminophen",
+    "category": "해열진통제",
+    "ingredient": "아세트아미노펜",
+    "drug_class": "비마약성 해열·진통제",
+    "purpose": "발열, 두통, 근육통 완화",
+    "tags": ["general", "altitude", "cold"],
+    "cautions": [
+      "1일 최대 용량 초과 시 간 손상 위험 — 종합감기약 등 다른 약과 성분 중복 주의",
+      "음주 후 복용 피하기"
+    ],
+    "companion_warnings": {
+      "아동": "소아는 체중 기준 용량 — 소아용 제형으로 약사 상담",
+      "임산부": "비교적 안전한 편이나 복용 전 상담 권장"
+    },
+    "source": "식약처 의약품안전나라 일반의약품 정보"
+  },
+  {
+    "id": "ibuprofen",
+    "category": "해열진통제",
+    "ingredient": "이부프로펜",
+    "drug_class": "비스테로이드성 소염진통제(NSAIDs)",
+    "purpose": "근육통, 관절통, 발열, 염증 완화",
+    "tags": ["general", "muscle", "walking"],
+    "cautions": [
+      "공복 복용 시 위장장애 — 음식과 함께 복용",
+      "위궤양·신장질환·천식 환자는 복용 전 상담"
+    ],
+    "companion_warnings": {
+      "아동": "생후 6개월 미만 금기 — 소아 용량은 약사 상담 필수",
+      "고령자": "위장출혈·신장 기능 저하 위험 — 주의",
+      "임산부": "임신 후기(28주 이후) 금기 — 복용 금지, 반드시 상담"
+    },
+    "source": "식약처 의약품안전나라 일반의약품 정보"
+  },
+  {
+    "id": "loperamide",
+    "category": "지사제/정장제",
+    "ingredient": "로페라미드",
+    "drug_class": "지사제(장운동 억제)",
+    "purpose": "여행자 설사, 묽은 변 증상 완화",
+    "tags": ["water_change"],
+    "cautions": [
+      "고열·혈변을 동반한 설사에는 사용 금지 — 감염 가능성, 병원 진료",
+      "장기 복용 금지, 증상 호전 시 중단"
+    ],
+    "companion_warnings": {
+      "아동": "만 2세 미만 금기 — 소아는 반드시 상담",
+      "임산부": "복용 전 상담 필요"
+    },
+    "source": "식약처 의약품안전나라 일반의약품 정보"
+  },
+  {
+    "id": "probiotics_ors",
+    "category": "지사제/정장제",
+    "ingredient": "정장제(유산균) · 경구수분보충염(ORS)",
+    "drug_class": "정장 보조 · 수분/전해질 보충",
+    "purpose": "물갈이·장 트러블 완화, 설사 시 탈수 예방",
+    "tags": ["water_change", "hot_humid"],
+    "cautions": [
+      "ORS는 깨끗한 물에 정량으로 녹여 사용",
+      "설사가 심하거나 2~3일 이상 지속되면 병원 진료"
+    ],
+    "companion_warnings": {
+      "고령자": "탈수에 특히 취약 — 수분 보충 적극 권장"
+    },
+    "source": "식약처/WHO 경구수분보충 권장 정보"
+  },
+  {
+    "id": "cold_combo",
+    "category": "종합감기약",
+    "ingredient": "종합감기약(복합 성분)",
+    "drug_class": "해열·진통·콧물·기침 복합제",
+    "purpose": "콧물, 기침, 발열 등 감기 증상 완화",
+    "tags": ["general", "cold"],
+    "cautions": [
+      "아세트아미노펜 등과 성분 중복 가능 — 다른 해열제와 동시 복용 주의",
+      "졸음 성분 포함 가능 — 운전·도보 이동 전 확인"
+    ],
+    "companion_warnings": {
+      "아동": "성인용 금지 — 소아 전용 제품 사용",
+      "임산부": "성분이 다양하므로 복용 전 반드시 상담"
+    },
+    "source": "식약처 의약품안전나라 일반의약품 정보"
+  },
+  {
+    "id": "cetirizine",
+    "category": "항히스타민제/멀미약",
+    "ingredient": "세티리진(항히스타민제)",
+    "drug_class": "2세대 항히스타민제",
+    "purpose": "벌레 물림·알레르기 가려움, 콧물 완화",
+    "tags": ["mosquito", "cold"],
+    "cautions": [
+      "졸음이 올 수 있음 — 활동 전 주의",
+      "신장질환자는 용량 조절 필요 — 상담"
+    ],
+    "companion_warnings": {
+      "아동": "연령별 용량이 다름 — 소아용 확인",
+      "임산부": "복용 전 상담 권장"
+    },
+    "source": "식약처 의약품안전나라 일반의약품 정보"
+  },
+  {
+    "id": "dimenhydrinate",
+    "category": "항히스타민제/멀미약",
+    "ingredient": "디멘히드리네이트(멀미약)",
+    "drug_class": "1세대 항히스타민계 멀미약",
+    "purpose": "차·비행기·배 멀미 예방 및 완화",
+    "tags": ["motion"],
+    "cautions": [
+      "이동 30분~1시간 전 복용",
+      "졸음이 강하게 올 수 있음 — 운전자 복용 주의"
+    ],
+    "companion_warnings": {
+      "아동": "연령 제한 있음 — 소아용 제품/용량 확인",
+      "임산부": "복용 전 상담 권장"
+    },
+    "source": "식약처 의약품안전나라 일반의약품 정보"
+  },
+  {
+    "id": "wound_care",
+    "category": "상처 케어",
+    "ingredient": "소독제 · 항생연고 · 밴드/거즈",
+    "drug_class": "외용 소독·상처 보호",
+    "purpose": "찰과상, 물집, 벌레 물린 상처 소독·보호",
+    "tags": ["general", "blister", "mosquito"],
+    "cautions": [
+      "깊은 상처·동물 교상은 자가 처치 후 병원 진료",
+      "연고 사용 후 발진 시 중단"
+    ],
+    "companion_warnings": {},
+    "source": "일반 응급처치 권장 정보"
+  }
+]

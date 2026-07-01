@@ -1,0 +1,22 @@
+{
+  "동남아": {
+    "label": "동남아 / 휴양지 (덥고 습함, 물갈이·모기 위험)",
+    "tags": ["general", "water_change", "hot_humid", "mosquito", "motion"],
+    "note": "물갈이 설사·탈수·모기 매개 질환 대비가 핵심. 음식·물 위생 주의."
+  },
+  "유럽도보": {
+    "label": "유럽 / 도보·트레킹 여행 (많이 걷고 일교차 큼)",
+    "tags": ["general", "walking", "muscle", "blister", "cold"],
+    "note": "근육통·물집·일교차 감기 대비가 핵심."
+  },
+  "고산": {
+    "label": "고산지대 (해발 2500m 이상)",
+    "tags": ["general", "altitude", "cold"],
+    "note": "고산병 예방약(아세타졸아미드 등)은 전문의약품 — 출발 전 의사 처방 필요. 본 키트는 일반 증상 대비용."
+  },
+  "일반": {
+    "label": "일반 도심 여행",
+    "tags": ["general"],
+    "note": "기본 상비약 위주."
+  }
+}
