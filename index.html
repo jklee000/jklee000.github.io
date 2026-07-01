@@ -117,6 +117,12 @@
     @keyframes optReveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
     #optional-grid:not(.hidden) { animation: optReveal .22s ease; }
 
+    /* 단계 전환 슬라이드 애니메이션 */
+    @keyframes slideInR { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: none; } }
+    @keyframes slideInL { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: none; } }
+    .slide-in-r { animation: slideInR .32s ease both; }
+    .slide-in-l { animation: slideInL .32s ease both; }
+
     /* ============ 화면 전체 = 캐리어 '안쪽 안감'(인테리어) ============ */
     .suitcase-shell {
       position: relative;
@@ -333,7 +339,7 @@
       </div>
 
       <!-- 다음 단계 버튼 -->
-      <button id="btn-next" class="mt-6 w-full py-3 rounded-xl bg-[#1f7bd8] text-white font-bold text-base shadow-sm hover:brightness-110 transition flex items-center justify-center gap-2">
+      <button id="btn-next" class="mt-6 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#39a2f2] to-[#1a5cab] text-white font-bold text-base shadow-md hover:brightness-105 transition flex items-center justify-center gap-2">
         나의 상비약 체크리스트 보기 <span aria-hidden="true">→</span>
       </button>
     </section>
@@ -1184,8 +1190,15 @@
 
   // 단계 전환 (1: 조건 선택 → 2: 상비약 체크리스트)
   function goStep(n) {
-    document.getElementById('step-input').style.display     = (n === 1) ? '' : 'none';
-    document.getElementById('result-section').style.display = (n === 2) ? '' : 'none';
+    const input  = document.getElementById('step-input');
+    const result = document.getElementById('result-section');
+    input.style.display  = (n === 1) ? '' : 'none';
+    result.style.display = (n === 2) ? '' : 'none';
+    const el  = (n === 2) ? result : input;
+    const cls = (n === 2) ? 'slide-in-r' : 'slide-in-l';
+    el.classList.remove('slide-in-r', 'slide-in-l');
+    void el.offsetWidth;              // 리플로우로 애니메이션 재생 강제
+    el.classList.add(cls);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   document.getElementById('btn-next').onclick = () => goStep(2);
