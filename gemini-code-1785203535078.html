@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 시니어 건강관리 모바일 뷰 (또미 강아지 + 음성녹음)</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5AB38F;
+            --primary-light: #A7E4C4;
+            --accent: #FFA07A;
+            --record-red: #FF6B6B;
+            --bg-main: #F4FAF7;
+            --bg-white: #FFFFFF;
+            --text-dark: #2F4F4F;
+            --text-gray: #708090;
+            --border-color: #D1EBE0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #E2E8F0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* 모바일 디바이스 프레임 */
+        .mobile-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            max-height: 850px;
+            background-color: var(--bg-main);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 401px) {
+            .mobile-frame {
+                height: 850px;
+                border-radius: 30px;
+                border: 8px solid #333;
+            }
+        }
+
+        /* Header */
+        .header {
+            padding: 20px;
+            text-align: center;
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Main AI Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            background-color: var(--bg-white);
+            padding: 15px 20px;
+            border-radius: 20px;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 4px 15px rgba(90, 179, 143, 0.1);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+            border: 1px solid var(--border-color);
+            line-height: 1.5;
+        }
+
+        /* -----------------------------------------
+           또미 (Ttomi) - Real Puppy Character CSS 
+           ----------------------------------------- */
+        .character-container {
+            position: relative;
+            margin-bottom: 10px;
+            animation: floatRefine 2.5s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        .character-head {
+            width: 140px;
+            height: 110px;
+            background: #FFF6E5;
+            border-radius: 50% 50% 45% 45%; 
+            box-shadow: 0 10px 25px rgba(90, 179, 143, 0.25), inset -5px -10px 20px rgba(0,0,0,0.03);
+            position: relative;
+            border: 4px solid var(--primary-light);
+            z-index: 2;
+        }
+
+        .ear {
+            position: absolute;
+            width: 45px;
+            height: 85px;
+            background: #E8D3BA;
+            border: 4px solid var(--primary-light);
+            border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+            top: 15px;
+            z-index: 1;
+            box-shadow: inset -3px -5px 10px rgba(0,0,0,0.02);
+            transform-origin: top center;
+            animation: earFlap 2.5s ease-in-out infinite;
+        }
+
+        .ear.left {
+            left: -15px;
+            transform: rotate(20deg);
+        }
+
+        .ear.right {
+            right: -15px;
+            transform: rotate(-20deg);
+            animation: earFlapRight 2.5s ease-in-out infinite;
+        }
+
+        .eye {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #4A4A4A;
+            border-radius: 50%;
+            top: 40px;
+        }
+        .eye.left { left: 35px; }
+        .eye.right { right: 35px; }
+
+        .blush {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            opacity: 0.5;
+            top: 55px;
+        }
+        .blush.left { left: 20px; }
+        .blush.right { right: 20px; }
+
+        .muzzle {
+            position: absolute;
+            width: 60px;
+            height: 45px;
+            background: #FFFFFF;
+            border-radius: 50%;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .nose {
+            position: absolute;
+            width: 16px;
+            height: 10px;
+            background: #4A4A4A;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .mouth {
+            position: absolute;
+            display: flex;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .lip {
+            width: 10px;
+            height: 8px;
+            border-bottom: 2.5px solid #4A4A4A;
+            border-radius: 0 0 10px 10px;
+        }
+        .lip.left { border-right: 1.25px solid #4A4A4A; }
+        .lip.right { border-left: 1.25px solid #4A4A4A; }
+
+        .character-shadow {
+            width: 100px;
+            height: 12px;
+            background-color: rgba(0,0,0,0.06);
+            border-radius: 50%;
+            margin-bottom: 30px;
+            animation: shadowRefine 2.5s ease-in-out infinite;
+        }
+
+        /* Action Button */
+        .action-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            width: 80%;
+            box-shadow: 0 5px 15px rgba(90, 179, 143, 0.4);
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Health Report Modal (Slide-up) */
+        .report-modal {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 90%;
+            background-color: var(--bg-white);
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .report-modal.active {
+            bottom: 0;
+        }
+
+        .modal-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .modal-header h2 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-gray);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card {
+            background-color: #FAFAFA;
+            border: 1px solid #EEEEEE;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        /* Medication Check */
+        .med-check-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .med-btn {
+            flex: 1;
+            padding: 12px 0;
+            border: 2px solid var(--border-color);
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            color: var(--text-gray);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .med-btn.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Textarea with Mic Button */
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            padding-right: 50px; /* 녹음 버튼 들어갈 공간 확보 */
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            color: var(--text-dark);
+            background-color: var(--bg-white);
+        }
+        
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        /* 녹음 버튼 디자인 */
+        .mic-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: var(--primary-light);
+            color: var(--text-dark);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* 녹음 중일 때 나타나는 깜빡임 효과 */
+        .mic-btn.recording {
+            background-color: var(--record-red);
+            color: white;
+            animation: pulseRecord 1.5s infinite;
+        }
+
+        .save-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .save-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Past Records List */
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #EEEEEE;
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .record-date {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .record-status {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes floatRefine {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-15px) scale(1.02); }
+        }
+
+        @keyframes earFlap {
+            0%, 100% { transform: rotate(20deg); }
+            50% { transform: rotate(15deg); }
+        }
+        
+        @keyframes earFlapRight {
+            0%, 100% { transform: rotate(-20deg); }
+            50% { transform: rotate(-15deg); }
+        }
+        
+        @keyframes shadowRefine {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(0.8); opacity: 0.2; }
+        }
+        
+        @keyframes pulseRecord {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="mobile-frame">
+        <!-- Header -->
+        <header class="header">
+            <h1>AI 케어메이트</h1>
+        </header>
+
+        <!-- Main Chat / Character Area -->
+        <main class="chat-area">
+            <div class="speech-bubble" id="greetingMsg">
+                안녕하세요! 🐶<br>건강지킴이 <strong>또미</strong>예요.<br>오늘 하루 컨디션은 어떠신가요?
+            </div>
+            
+            <!-- Ttomi Character (Dog Version) -->
+            <div class="character-container">
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+                <div class="character-head">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="blush left"></div>
+                    <div class="blush right"></div>
+                    <div class="muzzle">
+                        <div class="nose"></div>
+                        <div class="mouth">
+                            <div class="lip left"></div>
+                            <div class="lip right"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="character-shadow"></div>
+
+            <button class="action-btn" id="openReportBtn">
+                <i class="fas fa-notes-medical"></i> 건강 리포트
+            </button>
+        </main>
+
+        <!-- Health Report Modal -->
+        <div class="report-modal" id="reportModal">
+            <div class="modal-header">
+                <h2><i class="fas fa-clipboard-list" style="color:var(--primary);"></i> 나의 건강 리포트</h2>
+                <button class="close-btn" id="closeReportBtn"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="modal-body">
+                
+                <!-- 복약 체크 -->
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-pills"></i> 오늘의 복약 여부</h3>
+                    <div class="med-check-group">
+                        <button class="med-btn" onclick="toggleMed(this)">아침</button>
+                        <button class="med-btn" onclick="toggleMed(this)">점심</button>
+                        <button class="med-btn" onclick="toggleMed(this)">저녁</button>
+                    </div>
+                </div>
+
+                <!-- 건강 상태 입력 (음성녹음 포함) -->
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-heartbeat"></i> 오늘의 건강 상태</h3>
+                    
+                    <div class="input-wrapper">
+                        <textarea id="statusInput" placeholder="예: 오늘 아침엔 무릎이 조금 뻐근했어요."></textarea>
+                        <!-- 녹음 버튼 -->
+                        <button class="mic-btn" id="micBtn" onclick="toggleRecord()" title="음성으로 입력하기">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                    
+                    <button class="save-btn" onclick="saveStatus()">상태 기록하기</button>
+                </div>
+
+                <!-- 지난 기록 -->
+                <div class="card">
+                    <h3 class="section-title"><i class="fas fa-history"></i> 지난 기록 요약</h3>
+                    <div class="record-item">
+                        <span class="record-date">어제 (7/27)</span>
+                        <span class="record-status">컨디션 좋음, 약 모두 복용 완료 🟢</span>
+                    </div>
+                    <div class="record-item">
+                        <span class="record-date">2일 전 (7/26)</span>
+                        <span class="record-status">가벼운 두통, 약 복용 완료 🟡</span>
+                    </div>
+                    <div class="record-item">
+                        <span class="record-date">3일 전 (7/25)</span>
+                        <span class="record-status">컨디션 좋음, 약 모두 복용 완료 🟢</span>
+                    </div>
+                </div>
+                
+                <div style="height: 30px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 모달 열기/닫기
+        const modal = document.getElementById('reportModal');
+        const openBtn = document.getElementById('openReportBtn');
+        const closeBtn = document.getElementById('closeReportBtn');
+
+        openBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // 복약 버튼 토글
+        function toggleMed(btn) {
+            btn.classList.toggle('active');
+            if (btn.classList.contains('active')) {
+                btn.innerHTML = btn.innerText + ' <i class="fas fa-check"></i>';
+            } else {
+                btn.innerHTML = btn.innerText.replace(' <i class="fas fa-check"></i>', '');
+            }
+        }
+
+        // 음성 녹음 토글 시뮬레이션
+        let recordingTimer;
+        function toggleRecord() {
+            const micBtn = document.getElementById('micBtn');
+            const textarea = document.getElementById('statusInput');
+            
+            if (micBtn.classList.contains('recording')) {
+                // 녹음 중지
+                micBtn.classList.remove('recording');
+                micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                
+                // 가상의 음성 입력 텍스트 추가
+                const fakeSpeechText = "오후부터 허리가 조금 아프네";
+                textarea.value = textarea.value ? textarea.value + " " + fakeSpeechText : fakeSpeechText;
+                
+            } else {
+                // 녹음 시작
+                micBtn.classList.add('recording');
+                micBtn.innerHTML = '<i class="fas fa-stop"></i>';
+            }
+        }
+
+        // 상태 기록하기 버튼
+        function saveStatus() {
+            alert('또미가 오늘의 건강 상태를 기록했어요! 🐾');
+            document.getElementById('statusInput').value = '';
+            
+            // 혹시 녹음 중이었다면 초기화
+            const micBtn = document.getElementById('micBtn');
+            if(micBtn.classList.contains('recording')) {
+                micBtn.classList.remove('recording');
+                micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            }
+            
+            modal.classList.remove('active');
+            document.getElementById('greetingMsg').innerHTML = '기록해주셔서 고마워요 멍!<br>오늘도 건강한 하루 보내세요 뼈다귀 🦴';
+        }
+    </script>
+</body>
+</html>
